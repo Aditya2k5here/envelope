@@ -1,8 +1,8 @@
 """DeepPoly: bounding a network's output over a box of inputs, soundly.
 
 The question is: over every input in a box, what values can the output take? The
-answer cannot be computed exactly -- that problem is NP-hard even for ReLU
-networks -- so it is over-approximated, in a way that is guaranteed never to be
+answer cannot be computed exactly. That problem is NP-hard even for ReLU
+networks, so it is over-approximated, in a way that is guaranteed never to be
 *too small*. An over-approximation that excludes a reachable value would let the
 verifier certify something false, which is the one failure mode a verifier is
 not allowed to have.
@@ -10,8 +10,8 @@ not allowed to have.
 The approximation works like this. Each neuron gets a lower and an upper bound
 that are *linear functions of the neurons before it*, rather than constants.
 Affine layers keep them exact. A ReLU whose input sign is already determined by
-the box keeps them exact too. Only a ReLU whose input straddles zero -- an
-"unstable" neuron -- loses information, and it is relaxed to the tightest
+the box keeps them exact too. Only a ReLU whose input straddles zero, an
+"unstable" neuron. Loses information, and it is relaxed to the tightest
 parallelogram containing its graph over ``[l, u]``:
 
     upper:  relu(z) <= (u / (u - l)) * (z - l)
@@ -27,7 +27,7 @@ of the test set.
 
 The two losses of precision are named and both are recoverable: the choice of
 ``alpha`` (heuristic here, optimisable) and the relaxation itself, which
-disappears entirely once a neuron's phase is fixed -- which is what
+disappears entirely once a neuron's phase is fixed, which is what
 :mod:`ev.branch` does when the answer is not clear enough.
 """
 
@@ -63,7 +63,7 @@ class Relaxation(object):
             # A branch can ask for a phase this sub-region cannot supply: an
             # ancestor's decision may already have forced this neuron the other
             # way. Then the sub-region is empty, and a property holds vacuously
-            # over an empty set -- so the branch closes rather than being an
+            # over an empty set, so the branch closes rather than being an
             # unproven leaf. Missing this is what left a fully-split region
             # looking undecidable when there was nothing in it to decide.
             if np.any(force_pos & (upper < 0)) or np.any(force_neg & (lower > 0)):
@@ -119,7 +119,7 @@ def witness(net, upto, row, relaxations, lo, hi):
     linear function over a box, and a linear function over a box is minimised at
     a corner: each coordinate goes to whichever end its coefficient points at.
 
-    That corner is not a counterexample -- it minimises the *relaxation*, not
+    That corner is not a counterexample. It minimises the *relaxation*, not
     the network. But it is the point at which the relaxation is most convinced
     the property fails, which makes it by far the best place to look, and when
     the region has been split until the relaxation is exact it *is* the
@@ -147,7 +147,7 @@ def lower_form(net, upto, row, relaxations):
     Same walk as the bound computation, stopped one step earlier: instead of
     minimising over the input box it hands back the linear function, so a caller
     can minimise it over something smaller than a box. That is the whole trick
-    behind deciding a branch precisely -- the relaxation was never the only
+    behind deciding a branch precisely, the relaxation was never the only
     source of slack, the box was.
     """
     A = np.asarray(row, dtype=np.float64).reshape(1, -1)
@@ -202,7 +202,7 @@ def influence(net, relaxations, row, lo, hi):
     records ``|coefficient| * interval width`` for every neuron. That product is
     an upper bound on how much slack that one relaxation can be contributing to
     the final bound, which makes it a far better thing to branch on than width
-    alone -- a wide neuron the objective barely depends on is not why the proof
+    alone, a wide neuron the objective barely depends on is not why the proof
     is failing.
     """
     A = np.asarray(row, dtype=np.float64).reshape(1, -1)
@@ -260,7 +260,7 @@ def analyse(net, lo, hi, alphas=None, fixed=None, objective=None):
     branching. ``objective`` is a matrix applied to the logits; verification
     asks about differences between logits rather than logits themselves, and
     bounding the difference directly is far tighter than subtracting two
-    separately computed bounds -- the two logits share almost all of their
+    separately computed bounds, the two logits share almost all of their
     history, and that cancellation is only visible if it happens inside the
     back-substitution.
     """
@@ -280,7 +280,7 @@ def analyse(net, lo, hi, alphas=None, fixed=None, objective=None):
 
     # There is no ReLU after the final layer, so the logits *are* that layer's
     # pre-activations and the objective can be back-substituted from there
-    # directly -- which is the whole reason differences between logits come out
+    # directly, which is the whole reason differences between logits come out
     # tighter than the difference of two separately computed logit bounds.
     last = net.n_layers - 1
     if objective is None:

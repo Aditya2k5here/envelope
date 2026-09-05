@@ -1,7 +1,7 @@
 """Branch and bound: turning "unknown" into an answer.
 
-The relaxation loses information at exactly one place -- a ReLU whose input
-straddles zero -- and the loss is not inherent. Split the region in two, one
+The relaxation loses information at exactly one place, a ReLU whose input
+straddles zero, and the loss is not inherent. Split the region in two, one
 half where that neuron's input is non-negative and one where it is not, and
 inside each half the neuron is a plain linear function with no relaxation at
 all. Verify both halves and the original region is verified, because the two
@@ -18,7 +18,7 @@ results section reports how far this one gets.
 
 Soundness note, since it is the part that is easy to get wrong: fixing a
 neuron's phase makes the bound valid only on the sub-region where that phase
-actually holds. It is not an approximation that might be a bit off -- outside
+actually holds. It is not an approximation that might be a bit off. Outside
 that sub-region the bound is simply false. What makes it sound is that the
 sibling branch covers precisely the inputs where it is false, and both must
 verify before the parent does.
@@ -47,8 +47,8 @@ def _witness_attack(net, analysis, C, lo, hi, x, label, eps):
     """Ask the relaxation where it thinks the property fails, and go look.
 
     For every failing margin row, take the corner the back-substituted bound is
-    minimised at and run the real network on it. Cheap -- one forward pass per
-    row -- and it is what closes the gap between "the relaxation could not prove
+    minimised at and run the real network on it. Cheap, one forward pass per
+    row, and it is what closes the gap between "the relaxation could not prove
     it" and "here is the input that breaks it".
     """
     order = np.argsort(analysis.out_lower)
@@ -96,7 +96,7 @@ def verify(net, x, label=None, eps=0.01, clip=(0.0, 1.0), max_branches=2000,
                       reason="the relaxation's own minimiser broke the network")
 
     # Depth-first, so memory stays proportional to depth rather than to the
-    # number of open subproblems -- and so a hard input fails fast rather than
+    # number of open subproblems, and so a hard input fails fast rather than
     # after filling memory with a frontier.
     stack = [({}, root_analysis)]
     branches = 0
@@ -119,7 +119,7 @@ def verify(net, x, label=None, eps=0.01, clip=(0.0, 1.0), max_branches=2000,
         candidates = analysis.unstable_neurons()
         if not candidates:
             # Fully split. The analysis is now exact on this sub-region, but the
-            # bound was evaluated over the whole box, which is larger -- so a
+            # bound was evaluated over the whole box, which is larger, so a
             # negative bound here is not yet evidence of anything. Solving the
             # region as a linear program settles it either way.
             failing = np.nonzero(analysis.out_lower <= 0)[0]

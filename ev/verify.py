@@ -89,7 +89,7 @@ def input_box(x, eps, clip=None):
 def bound_margins(net, lo, hi, C, fixed=None):
     """Lower bound on every margin, from both domains at once.
 
-    DeepPoly is far tighter than interval propagation almost always -- and
+    DeepPoly is far tighter than interval propagation almost always, and
     *almost* is the operative word, since neither dominates the other in every
     case. Both are sound, so the pointwise maximum of their lower bounds is
     sound too, and taking it costs one extra forward pass.
@@ -100,7 +100,7 @@ def bound_margins(net, lo, hi, C, fixed=None):
         ibp_lo, _, _, _ = interval.analyse(net, lo, hi, objective=C)
         return np.maximum(dp_lo, ibp_lo), a
     # Under a branching assumption, interval propagation has no way to use the
-    # fixed phases, so its bound would be the unconstrained one -- still sound,
+    # fixed phases, so its bound would be the unconstrained one. Still sound,
     # but it would silently undo the branch's benefit if it happened to be
     # larger. It is left out rather than made to look helpful.
     return dp_lo, a

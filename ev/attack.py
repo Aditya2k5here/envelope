@@ -1,6 +1,6 @@
 """Falsification: find the perturbation, do not merely fail to rule one out.
 
-A verifier that answers "unknown" has told you nothing about the network -- only
+A verifier that answers "unknown" has told you nothing about the network. Only
 about itself. Half of removing that answer is proving more; the other half is
 searching harder for the counterexample, and search is much cheaper than proof.
 
@@ -8,7 +8,7 @@ The search is projected gradient descent on the margin. Starting from random
 points in the ball, take a step in the direction that most reduces the smallest
 margin, project back into the ball, repeat. Every candidate it returns is
 checked by actually running the network on it, so a counterexample from here is
-a fact rather than an estimate -- which is the asymmetry that makes this worth
+a fact rather than an estimate, which is the asymmetry that makes this worth
 doing: the prover's answer requires trusting the analysis, the attacker's
 requires trusting nothing.
 """

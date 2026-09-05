@@ -8,8 +8,8 @@ verifier says "no perturbation within epsilon changes this prediction", there is
 no question about what "this" refers to.
 
 The architecture is deliberately small. Verification cost grows with the number
-of ReLUs that are *unstable* on a given input -- neurons whose sign the input
-region does not determine -- and complete verification is exponential in that
+of ReLUs that are *unstable* on a given input. Neurons whose sign the input
+region does not determine, and complete verification is exponential in that
 number in the worst case. A network small enough to verify exactly is a network
 whose verification results mean something; a network too large to verify is one
 where the interesting answer is always "unknown".
@@ -135,7 +135,7 @@ def train(X, y, hidden, n_classes, epochs=60, lr=0.05, batch=64, seed=0,
     """Plain SGD with momentum on softmax cross-entropy.
 
     No tricks, because the network is not the contribution. It only has to be
-    accurate enough that its robustness is an interesting question -- a network
+    accurate enough that its robustness is an interesting question, a network
     at chance accuracy is trivially robust and says nothing.
     """
     rng = np.random.default_rng(seed)

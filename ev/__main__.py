@@ -1,4 +1,4 @@
-"""``python -m ev`` -- ask the verifier about one input.
+"""``python -m ev``: ask the verifier about one input.
 
 Three verbs:
 

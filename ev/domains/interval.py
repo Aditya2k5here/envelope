@@ -6,8 +6,8 @@ useless on anything deeper than two layers, because each layer's over-
 approximation becomes the next layer's input and the error compounds
 multiplicatively.
 
-It is here for two reasons. It is the baseline the results are measured against
--- "DeepPoly certifies N times more inputs" is a claim that needs a denominator.
+It is here for two reasons. It is the baseline the results are measured against.
+"DeepPoly certifies N times more inputs" is a claim that needs a denominator.
 And it is an independent second opinion: two different sound analyses must never
 disagree about a *counterexample*, and the tests check that IBP's bounds always
 contain DeepPoly's, which they must, since a tighter sound bound is still sound.

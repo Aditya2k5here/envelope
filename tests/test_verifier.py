@@ -3,14 +3,14 @@
 A verifier is unusual: it can be broken in a way that makes it *more* useful
 looking. A bound that is slightly too tight certifies more inputs, runs faster,
 and is wrong. So the tests here are mostly not about outputs matching expected
-values -- they are about a property that must hold universally:
+values. They are about a property that must hold universally:
 
     every bound must contain every value the network can actually produce.
 
 That is checked by sampling: hundreds of random networks, random boxes, and
 thousands of concrete points inside each. A sound analysis can never be
 contradicted by a sample, so any contradiction is a proof of a bug. The reverse
-is not true -- sampling cannot prove soundness -- which is why the property is
+is not true. Sampling cannot prove soundness, which is why the property is
 checked across randomly generated networks rather than a fixed few.
 """
 
@@ -102,7 +102,7 @@ def test_bounding_margins_beats_subtracting_logit_bounds(trial):
 def test_a_split_covers_the_region_it_replaces(trial):
     """The property that makes branching sound.
 
-    Fixing a phase gives a bound valid only where that phase holds -- outside it
+    Fixing a phase gives a bound valid only where that phase holds. Outside it
     the bound is simply false. What rescues it is that the sibling branch covers
     exactly those inputs, so every concrete point must be contained by at least
     one of the two.
@@ -213,7 +213,7 @@ def test_every_counterexample_is_real(digits, eps):
 def test_verified_and_falsified_are_never_both_claimed(digits):
     """Monotonicity: shrinking the ball can only help.
 
-    If a radius is verified, every smaller radius must be too -- the smaller ball
+    If a radius is verified, every smaller radius must be too, the smaller ball
     is contained in the larger one. A verifier that violates this is
     inconsistent with itself regardless of whether either answer is sound.
     """

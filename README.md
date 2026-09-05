@@ -8,7 +8,7 @@ Given a network, an input and a radius, it returns one of exactly two things:
 - the **perturbation that does**, confirmed by running the network on it.
 
 Not "probably robust". Not "unknown". On the network here it decided **600 out
-of 600** verification queries — 10 radii × 60 inputs — with zero undecided and
+of 600** verification queries. 10 radii × 60 inputs, with zero undecided and
 zero soundness failures.
 
 ```console
@@ -45,7 +45,7 @@ original -> 1          perturbed -> 4
 Verifying a ReLU network is NP-hard, so every practical verifier
 over-approximates: it computes a superset of what the network can output, and if
 even the worst case in that superset is safe, the network is safe. When the
-superset is too loose the answer is "unknown" — which tells you nothing about the
+superset is too loose the answer is "unknown", which tells you nothing about the
 network, only about the tool.
 
 Most published verification results contain a great deal of "unknown", usually
@@ -76,7 +76,7 @@ Read the ε=0.12 row twice. The one-shot relaxation proves **nothing**. The
 complete verifier proves **13** of those same 60 inputs safe and produces
 counterexamples for the other 47. That difference is the entire contribution.
 
-Interval propagation — the naive sound analysis — is useless past ε=0.02. It is
+Interval propagation, the naive sound analysis. Is useless past ε=0.02. It is
 kept as the control, because "DeepPoly certifies more" needs a denominator.
 
 ### How close is the verifier to the truth?
@@ -90,7 +90,7 @@ what the verifier does not know.
 |---|---:|
 | certified radius | 0.0923 |
 | attacked radius | 0.0928 |
-| **gap** | **0.00049 — 0.64% of the radius** |
+| **gap** | **0.00049. 0.64% of the radius** |
 
 The verifier pins the true robustness radius of a typical input to within
 0.64%. During development that gap was 23.7%; the section below is the story of
@@ -101,15 +101,15 @@ closing it.
 Getting to zero unknowns took three ideas, and only the first is textbook.
 
 **1. Branch and bound.** The relaxation loses information at exactly one place:
-a ReLU whose input straddles zero. Split the region in two — one half where that
-neuron's input is non-negative, one where it is not — and inside each half the
+a ReLU whose input straddles zero. Split the region in two, one half where that
+neuron's input is non-negative, one where it is not, and inside each half the
 neuron is plain linear with no relaxation at all. Verify both and the parent is
 verified. With enough splits the analysis becomes exact, which makes the method
 *complete* rather than merely sound.
 
 **2. Branch on influence, not on width.** The obvious neuron to split is the one
 with the widest interval. The better one is the neuron whose relaxation
-contributes most to the *failing margin* — the product of its interval width and
+contributes most to the *failing margin*, the product of its interval width and
 its coefficient in the back-substituted bound. A wide neuron the objective barely
 depends on is not why the proof is stuck. This alone cut ε=0.10 from 23,774
 branches to 1,396.
@@ -117,7 +117,7 @@ branches to 1,396.
 **3. Minimise over the region, not over the box.** This was the one that
 mattered, and it took a while to see.
 
-Fixing a neuron's phase makes the bound valid on a *sub-region* of the box — the
+Fixing a neuron's phase makes the bound valid on a *sub-region* of the box, the
 part where that phase holds. But the bound was still being evaluated over the
 whole box, which is strictly larger. So branching tightened the relaxation and
 then immediately threw the benefit away: a fully-split region, where the analysis
@@ -125,7 +125,7 @@ is exact, could still report a negative bound because the minimum was being take
 somewhere outside the region.
 
 The fix is to keep the back-substituted bound as a *linear function* instead of
-evaluating it, and minimise it over the polytope the branch actually describes —
+evaluating it, and minimise it over the polytope the branch actually describes,
 the box plus one linear inequality per fixed neuron, each of which is itself an
 exact affine function of the input. That is a small linear program per failing
 margin per node.
@@ -140,13 +140,13 @@ A 290× reduction, and the median radius gap fell from 14.3% to 0.64%.
 ## Is it actually sound?
 
 A verifier is the one kind of program where passing tests is not reassurance
-enough, because the failure mode is a *confident wrong answer* — and a bound
+enough, because the failure mode is a *confident wrong answer*, and a bound
 that is slightly too tight certifies more inputs, runs faster, and is wrong.
 
 So soundness is checked as a universal property rather than by examples:
 
 - **Sampling audit, in the results themselves.** Every region the verifier calls
-  safe is then attacked by brute force — thousands of random points and box
+  safe is then attacked by brute force. Thousands of random points and box
   corners inside it. A sound proof can never be contradicted by a sample. Across
   the entire results table: 0 contradictions.
 - **Random-network property tests.** Hundreds of randomly generated networks and
@@ -156,7 +156,7 @@ So soundness is checked as a universal property rather than by examples:
   point must be soundly bounded by whichever branch actually contains it.
 - **Every counterexample is verified by running the network**, checked to be
   inside the ball, and checked to be a valid input. The attacker's answers
-  require trusting nothing — which is the asymmetry that makes falsification
+  require trusting nothing, which is the asymmetry that makes falsification
   worth as much effort as proof.
 
 230 tests, `python -m pytest tests -q`.
@@ -177,10 +177,10 @@ $ python -m pytest tests -q
 | path | |
 |---|---|
 | `ev/net.py` | the network, and the numpy SGD that trains it |
-| `ev/domains/interval.py` | interval propagation — the control |
+| `ev/domains/interval.py` | interval propagation, the control |
 | `ev/domains/deeppoly.py` | linear relaxation with back-substitution |
 | `ev/verify.py` | the robustness query, and the sampling audit |
-| `ev/attack.py` | projected gradient descent — the falsifier |
+| `ev/attack.py` | projected gradient descent, the falsifier |
 | `ev/branch.py` | branch and bound, and the influence heuristic |
 | `ev/exact.py` | the region linear programs |
 | `experiments/` | training and the sweep |
@@ -201,8 +201,8 @@ claim about that specific object.
   machinery with a different input domain, and the input domain is a box
   everywhere in the code.
 - **`alpha` is chosen heuristically.** The lower relaxation slope is picked by
-  the standard area-minimising rule. Optimising it by gradient descent — as
-  α-CROWN does — would tighten every bound before any branching, and is the
+  the standard area-minimising rule. Optimising it by gradient descent. As
+  α-CROWN does. Would tighten every bound before any branching, and is the
   most obvious next thing to build.
 - **The leaf programs use scipy's LP solver.** Everything else, including the
   entire abstract interpreter, is numpy. Writing the simplex would be a

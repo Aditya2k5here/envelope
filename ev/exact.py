@@ -2,7 +2,7 @@
 
 Branch-and-bound splits until every ReLU's phase is fixed. At that point the
 network restricted to the region is a single affine function, and the analysis
-of it is exact -- which sounds like it should settle the question, and does not,
+of it is exact, which sounds like it should settle the question, and does not,
 for a reason that is easy to miss and was the last source of "unknown" answers
 in this project.
 
@@ -18,8 +18,8 @@ those pre-activations is itself an exact affine function of the input, for the
 same reason the margin is. So the leaf is a linear program, and solving it
 decides the leaf outright:
 
-* minimum >= 0 -- the property holds everywhere in this region;
-* minimum < 0  -- the minimiser is a real input, in the region, that the network
+* minimum >= 0, the property holds everywhere in this region;
+* minimum < 0, the minimiser is a real input, in the region, that the network
   really does misclassify. Not a candidate: the affine model is exact here, and
   it is checked against the network anyway before being returned.
 
@@ -87,8 +87,8 @@ def refine_over_region(net, analysis, C, lo, hi, fixed, rows):
     """Minimise each failing margin's *lower bound* over the branch's polytope.
 
     At a node with some phases fixed, the DeepPoly lower bound ``L(x)`` is valid
-    on the sub-region those phases describe. Evaluating it over the whole box --
-    which is what the analysis does by default -- therefore throws away exactly
+    on the sub-region those phases describe. Evaluating it over the whole box,
+which is what the analysis does by default. Therefore throws away exactly
     the information the branch just bought. Minimising the same linear function
     over the polytope instead is still sound (it is a minimum of a valid lower
     bound over a superset of nothing) and is often dramatically tighter.
@@ -144,7 +144,7 @@ def decide_leaf(net, analysis, C, lo, hi, fixed, only_rows=None):
 
     # Only the rows the relaxation could not already settle. A margin whose
     # bound over the whole box is positive is positive over the sub-region too,
-    # since the sub-region is contained in the box -- so there is nothing for a
+    # since the sub-region is contained in the box, so there is nothing for a
     # linear program to add, and skipping those rows is most of the cost.
     rows = range(C.shape[0]) if only_rows is None else only_rows
     for row in rows:

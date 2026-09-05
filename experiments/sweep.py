@@ -2,7 +2,7 @@
 
 Three analyses are compared on the same inputs and the same radii:
 
-``ibp``       interval propagation alone -- the naive sound answer
+``ibp``       interval propagation alone, the naive sound answer
 ``deeppoly``  linear relaxation with back-substitution, one shot
 ``complete``  the same, plus falsification and branch-and-bound
 
@@ -13,8 +13,8 @@ zero, and the point of the experiment is to find out what that costs.
 
 Every verified result is audited by sampling the region it claims is safe, and
 every counterexample is confirmed by running the network on it. A verifier is
-the one kind of program where a passing test suite is not reassurance enough --
-the failure mode is a confident wrong answer -- so the results carry the audit
+the one kind of program where a passing test suite is not reassurance enough,
+the failure mode is a confident wrong answer, so the results carry the audit
 with them.
 """
 
