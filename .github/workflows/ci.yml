@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install numpy scipy scikit-learn pytest pyflakes
+      - name: soundness and unit tests
+        run: python -m pytest tests -q
+      - name: the verifier runs end to end
+        run: |
+          python -m ev verify --eps 0.06 --input 7
+          python -m ev verify --eps 0.20 --input 5
+          python -m ev radius --input 3 --iters 8
+      - name: lint
+        run: python -m pyflakes ev tests experiments
