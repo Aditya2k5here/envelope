@@ -159,7 +159,7 @@ So soundness is checked as a universal property rather than by examples:
   require trusting nothing, which is the asymmetry that makes falsification
   worth as much effort as proof.
 
-230 tests, `python -m pytest tests -q`.
+235 tests, `python -m pytest tests -q`.
 
 ## Running it
 
@@ -184,7 +184,7 @@ $ python -m pytest tests -q
 | `ev/branch.py` | branch and bound, and the influence heuristic |
 | `ev/exact.py` | the region linear programs |
 | `experiments/` | training and the sweep |
-| `tests/` | 230 tests, mostly property-based |
+| `tests/` | 235 tests, mostly property-based |
 
 No deep-learning framework. The network, its training, its analysis and its
 proof are all in this repository, which matters when the output is a formal

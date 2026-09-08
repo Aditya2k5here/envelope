@@ -4,7 +4,7 @@ PY ?= python3
 
 help:
 	@echo "make train   train the network the verifier reasons about"
-	@echo "make test    230 tests, mostly property-based soundness checks"
+	@echo "make test    235 tests, mostly property-based soundness checks"
 	@echo "make sweep   the results table"
 	@echo "make demo    verify one input, then break it at a larger radius"
 
